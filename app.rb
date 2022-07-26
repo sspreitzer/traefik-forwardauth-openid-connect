@@ -34,10 +34,10 @@ get '/' do
     redirect "#{provider_metadata['authorization_endpoint']}?scope=#{sanitizeUri(scope)}&response_type=code&client_id=#{sanitizeUri(client_id)}&redirect_uri=#{sanitizeUri(my_url)}&state=code"
   when 'code'
     data = {
-      'grant_type' => 'authorization_code',
-      'client_id' => client_id,
+      'grant_type'   => 'authorization_code',
+      'client_id'    => client_id,
       'redirect_uri' => my_url,
-      'code' => params['code']
+      'code'         => params['code']
     }
 
     b64_auth = Base64.strict_encode64("#{URI.encode_www_form_component(client_id)}:#{URI.encode_www_form_component(client_secret)}")
@@ -51,11 +51,13 @@ get '/' do
       logger.info "Received subject \"#{id['sub']}\" from \"#{issuer}\" with ClientID \"#{client_id}\" for \"#{my_url}\""
     end
 
-    return_header =       {
-      'Content-Type' => 'application/json',
-      'X-OIDC-Issuer' => issuer,
+    return_header = {
+      'Cache-Control'    => 'no-store',
+      'Pragma'           => 'no-cache',
+      'Content-Type'     => 'application/json',
+      'X-OIDC-Issuer'    => issuer,
       'X-OIDC-Client-ID' => client_id,
-      'X-OIDC-ID' => Base64.encode64(id.to_json)
+      'X-OIDC-ID'        => Base64.encode64(id.to_json)
     }
 
     id.each do |key, value|
