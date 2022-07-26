@@ -5,6 +5,8 @@ WORKDIR /usr/src/app
 COPY Gemfile Gemfile.lock config.ru app.rb ./
 RUN bundle install
 
-CMD ["puma", "-e", "production", "-p", "8080"]
+ENV PORT=8080
+
+CMD ["/bin/bash", "-c", "exec puma -e production -p ${PORT}"]
 
 EXPOSE 8080/tcp
